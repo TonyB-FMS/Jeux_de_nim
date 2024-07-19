@@ -41,7 +41,8 @@ def display_matches(multiple_piles):
         multiple_piles (list of int): List representing the number of matches in each pile.
     """
     for i, pile in enumerate(multiple_piles):
-        print(f"Tas {i + 1}: {'|' * pile}")
+        print(f"Tas {i + 1}: {'|' * pile} ({pile})")
+
 
 def get_player_move(player, piles):
     """
@@ -68,6 +69,7 @@ def get_player_move(player, piles):
         except ValueError:
             print("Entrée invalide. Entrez un nombre.")
 
+
 def compute_nim_sum(piles):
     """
     Computes the Nim-sum of the given piles.
@@ -82,6 +84,7 @@ def compute_nim_sum(piles):
     for pile in piles:
         nim_sum ^= pile
     return nim_sum
+
 
 def get_computer_move_marienbad(piles):
     """
@@ -105,6 +108,7 @@ def get_computer_move_marienbad(piles):
             if target_pile < pile:
                 return i, pile - target_pile
 
+
 def play_game(piles, player1, player2, is_computer, starting_player):
     """
     Manages the execution of the Nim game or Marienbad between two players or player and computer.
@@ -125,7 +129,9 @@ def play_game(piles, player1, player2, is_computer, starting_player):
             pile_choice, move = get_player_move(current_player, piles)
         else:
             pile_choice, move = get_computer_move_marienbad(piles)
-            print(f"L'ordinateur enlève {move} allumette(s) du tas {pile_choice + 1}.")
+            print(
+                f"L'ordinateur enlève {move} allumette(s) du tas {pile_choice + 1}. "
+                f"(reste {piles[pile_choice] - move})")
 
         piles[pile_choice] -= move
 
@@ -137,6 +143,7 @@ def play_game(piles, player1, player2, is_computer, starting_player):
 
         # Switch players
         current_player = player2 if current_player == player1 else player1
+
 
 def main():
     """
@@ -170,10 +177,12 @@ def main():
             is_computer = True
 
         while True:
-            starting_player = input(f"Qui commence, {player1} (entrez {player1.lower()}) ou {player2} (entrez {player2.lower()[0]})? ").lower()
+            starting_player = input(
+                f"Qui commence, {player1} (entrez {player1.lower()}) ou {player2} "
+                f"(entrez {player2.lower()[0]})? ").lower()
 
             if starting_player not in [player1.lower(), player2.lower()[0]]:
-                print(f"Choix invalide. Entrez {player1.lower()} ou {player2.lower()[0]}.")
+                print(f"Choix invalide. Veuillez entrer {player1.lower()} ou {player2.lower()[0]}.")
                 continue
 
             if starting_player == player1.lower():
@@ -190,11 +199,12 @@ def main():
         print(f"\n{starting_player} commence la partie.")
         play_game(piles, player1, player2, is_computer, starting_player)
 
-        replay_choice = input("Voulez-vous rejouer O/N ? (entrez 'O' pour rejouer, tout autre chose pour quitter): ").lower()
+        replay_choice = input(
+            "Voulez-vous rejouer? (entrez 'oui' pour rejouer, tout autre chose pour quitter): ").lower()
         if replay_choice != 'oui':
-            print("Merci d'avoir joué ! \nÀ bientôt.")
+            print("Merci d'avoir joué! À bientôt.")
             break
+
 
 if __name__ == "__main__":
     main()
-
