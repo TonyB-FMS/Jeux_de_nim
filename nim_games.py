@@ -1,68 +1,98 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-"""
-Jeux de nim
-variante simple et de Marienbad
-"""
-
-
-def get_player_move(player, remaining_turns):
+def get_player_move(player, remaining_matches):
     """
-    Ask the player the number of matches to remove and validates.
+    Prompts the player to remove a certain number of matches and validates the input.
 
-    Args :
-        player : actual player name.
-        remaining_turns : number of matches still in game.
+    Args:
+        player (str): The name of the current player.
+        remaining_matches (int): The number of matches remaining.
 
-    Returns :
-        int : number of matches to remove.
+    Returns:
+        int: The number of matches the player removes.
     """
     while True:
         try:
-            move = int(input(f"{player}, combien d'allumettes voulez-vous enlever (1-4) ?"))
-            if 1 <= move <= 4 and move <= remaining_turns:
+            move = int(input(f"{player}, combien d'allumettes voulez-vous enlever (1-4)? "))
+            if 1 <= move <= 4 and move <= remaining_matches:
                 return move
             else:
-                print(f"Entrez un nombre entre 1 et 4 (pas plus que ce qu'il reste: {remaining_turns}")
+                print(f"Entrez un nombre entre 1 et 4, et pas plus que le nombre d'allumettes restantes (reste {remaining_matches}).")
         except ValueError:
-            print("Invalide, entrez un nombre.")
+            print("Invalide. Entrez un nombre.")
 
+def get_computer_move(player_move):
+    """
+    Calculates the computer's move based on the player's move.
+
+    Args:
+        player_move (int): The number of matches removed by the player.
+
+    Returns:
+        int: The number of matches the computer removes.
+    """
+    return 5 - player_move
 
 def play_nim_game():
-   """
-   Execute the game between 2 human players.
+    """
+    Manages the execution of the Nim game between a human player and the computer.
 
-    - Demande les noms des deux joueurs.
-    - Demande quel joueur commence.
-    - Exécute une boucle de jeu où les joueurs enlèvent des allumettes à tour de rôle.
-    - Affiche le nombre d'allumettes restantes après chaque tour.
-    - Déclare le perdant (celui qui doit enlever la dernière allumette).
-   """
-    # Initialisation du jeu
+    This function:
+    - Asks for the human player's name.
+    - Asks who starts the game.
+    - Executes a game loop where the human player and the computer take turns removing matches.
+    - Displays the number of matches remaining after each turn.
+    - Declares the loser (the one who has to remove the last match).
+    """
+    # Game initialization
     total_matches = 21
-    player1 = input("Nom du joueur 1: ")
-    player2 = input("Nom du joueur 2: ")
-    current_player = input(f"Qui commence, {player1} ou {player2}? ")
+    player = input("Nom du joueur: ")
+    starting_player = input(f"Qui commence, {player} ou l'ordinateur? ")
 
-    # Vérification du joueur initial
-    if current_player not in [player1, player2]:
-        print(f"Le joueur initial doit être {player1} ou {player2}. Par défaut, {player1} commence.")
-        current_player = player1
-
-    # Boucle principale du jeu
+    # Main game loop
     while total_matches > 0:
         print(f"\nIl reste {total_matches} allumettes.")
-        move = get_player_move(current_player, total_matches)
-        total_matches -= move
 
-        # Changement de joueur
-        if total_matches > 0:
-            current_player = player2 if current_player == player1 else player1
+        if starting_player == player:
+            # Player's turn
+            move = get_player_move(player, total_matches)
+            total_matches -= move
 
-    # Fin du jeu, détermination du perdant
-    print(f"\nIl ne reste plus d'allumettes. {current_player} a perdu!")
+            # Check if the game continues
+            if total_matches == 0:
+                print(f"\nIl ne reste plus d'allumettes. {player} a perdu!")
+                break
 
-# Lancement du jeu
+            # Computer's turn
+            computer_move = get_computer_move(move)
+            print(f"L'ordinateur enlève {computer_move} allumettes.")
+            total_matches -= computer_move
+
+            # Check if the game continues
+            if total_matches == 0:
+                print("\nIl ne reste plus d'allumettes. L'ordinateur a perdu!")
+                break
+        else:
+            # Computer's turn to start the game
+            if total_matches == 21:
+                computer_move = 1
+            else:
+                computer_move = get_computer_move(player_move)
+            print(f"L'ordinateur enlève {computer_move} allumettes.")
+            total_matches -= computer_move
+
+            # Check if the game continues
+            if total_matches == 0:
+                print("\nIl ne reste plus d'allumettes. L'ordinateur a perdu!")
+                break
+
+            # Player's turn
+            player_move = get_player_move(player, total_matches)
+            total_matches -= player_move
+
+            # Check if the game continues
+            if total_matches == 0:
+                print(f"\nIl ne reste plus d'allumettes. {player} a perdu!")
+                break
+
+# Start the game
 if __name__ == "__main__":
     play_nim_game()
