@@ -43,7 +43,6 @@ def display_matches(multiple_piles):
     for i, pile in enumerate(multiple_piles):
         print(f"Tas {i + 1}: {'|' * pile}")
 
-
 def get_player_move(player, piles):
     """
     Prompts the player to remove a certain number of matches from a chosen pile and validates the input.
@@ -67,8 +66,7 @@ def get_player_move(player, piles):
             else:
                 print(f"Choisissez un tas valide avec des allumettes restantes (1-{len(piles)}).")
         except ValueError:
-            print("Invalide. Entrez un nombre.")
-
+            print("Entrée invalide. Entrez un nombre.")
 
 def compute_nim_sum(piles):
     """
@@ -84,7 +82,6 @@ def compute_nim_sum(piles):
     for pile in piles:
         nim_sum ^= pile
     return nim_sum
-
 
 def get_computer_move_marienbad(piles):
     """
@@ -107,7 +104,6 @@ def get_computer_move_marienbad(piles):
             target_pile = pile ^ nim_sum
             if target_pile < pile:
                 return i, pile - target_pile
-
 
 def play_game(piles, player1, player2, is_computer, starting_player):
     """
@@ -142,7 +138,6 @@ def play_game(piles, player1, player2, is_computer, starting_player):
         # Switch players
         current_player = player2 if current_player == player1 else player1
 
-
 def main():
     """
     Main function to choose the game version and mode, and start the game.
@@ -174,17 +169,18 @@ def main():
             player2 = "Ordinateur"
             is_computer = True
 
-        starting_player = input(
-            f"Qui commence, {player1} (entrez {player1.lower()}) ou {player2} (entrez {player2.lower()[0]})? ").lower()
+        while True:
+            starting_player = input(f"Qui commence, {player1} (entrez {player1.lower()}) ou {player2} (entrez {player2.lower()[0]})? ").lower()
 
-        if starting_player not in [player1.lower(), player2.lower()[0]]:
-            print(f"Choix invalide. Veuillez entrer {player1.lower()} ou {player2.lower()[0]}.")
-            continue
+            if starting_player not in [player1.lower(), player2.lower()[0]]:
+                print(f"Choix invalide. Entrez {player1.lower()} ou {player2.lower()[0]}.")
+                continue
 
-        if starting_player == player1.lower():
-            starting_player = player1
-        else:
-            starting_player = player2
+            if starting_player == player1.lower():
+                starting_player = player1
+            else:
+                starting_player = player2
+            break
 
         if version_choice == '1':
             piles = [21]
@@ -193,8 +189,12 @@ def main():
 
         print(f"\n{starting_player} commence la partie.")
         play_game(piles, player1, player2, is_computer, starting_player)
-        break
 
+        replay_choice = input("Voulez-vous rejouer O/N ? (entrez 'O' pour rejouer, tout autre chose pour quitter): ").lower()
+        if replay_choice != 'oui':
+            print("Merci d'avoir joué ! \nÀ bientôt.")
+            break
 
 if __name__ == "__main__":
     main()
+
